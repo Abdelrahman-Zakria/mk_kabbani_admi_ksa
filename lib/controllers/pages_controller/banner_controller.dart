@@ -63,6 +63,8 @@ class BannerController extends GetxController {
   List<Map<String, dynamic>> _generateData() {
 
     List source = banner;
+    print("Source length _generateData: ${source.length}");
+
     List<Map<String, dynamic>> temps = [];
     var i = 1;
     if (kDebugMode) {
@@ -89,6 +91,7 @@ class BannerController extends GetxController {
   }
 
   List getData() {
+    print("GET BANNERS STARTED");
     banner = [];
     FirebaseFirestore.instance
         .collection(collectionName.banner)
@@ -97,6 +100,7 @@ class BannerController extends GetxController {
         .then((value) {
       value.docs.asMap().entries.forEach((element) {
         banner.add(element.value.data());
+        print("Banner Added: ${element.value.data()['']}");
       });
     });
 
@@ -153,6 +157,7 @@ class BannerController extends GetxController {
           "image": imageUrl,
           "imageAr" : imageUrlAr,
           "bannerId": id,
+          "priority" : (banner.length - 1),
           "isProduct": txtId.text.isEmpty
               ? false
               : idType == "product"
@@ -198,7 +203,7 @@ class BannerController extends GetxController {
                 "priority" : bannerPriority,
                 "isProduct": element.value.data()["isProduct"],
                 "title": txtTitle.text,
-                "isActive": true
+                "isActive": true,
               }).then((value) {
                 txtTitle.text = "";
                 txtId.text = "";
@@ -240,6 +245,8 @@ class BannerController extends GetxController {
       sourceFiltered = sourceOriginal;
       total = sourceFiltered.length;
       source = sourceFiltered;
+      print("Source length mockPullData : ${source.length}");
+
       // if (sourceFiltered.length > 5) {
       //   source = sourceFiltered.getRange(0, currentPerPage!).toList();
       //
@@ -274,7 +281,9 @@ class BannerController extends GetxController {
       imageUrlAr = "";
       update();
     }
+
     log.log("bannerId : $bannerId");
+
     showDialog(
         context: Get.context!,
         builder: (BuildContext context) {
@@ -295,6 +304,8 @@ class BannerController extends GetxController {
       expanded = List.generate(expandedLen as int, (index) => false);
       source.clear();
       source = sourceFiltered.getRange(start, start + expandedLen).toList();
+      print("Source length resetData : ${source.length}");
+
       isLoading = false;
       update();
     });
@@ -321,6 +332,8 @@ class BannerController extends GetxController {
       var rangeTop = total < currentPerPage! ? total : currentPerPage!;
       expanded = List.generate(rangeTop, (index) => false);
       source = sourceFiltered.getRange(0, rangeTop).toList();
+      print("Source length filterData: ${source.length}");
+
     } catch (e) {
       log.log("filter error : $e");
     }
@@ -819,6 +832,7 @@ class BannerController extends GetxController {
         ? currentPerPage!
         : sourceFiltered.length;
     source = sourceFiltered.getRange(0, rangeTop).toList();
+    print("Source length: ${source.length}");
     searchKey = value;
     isLoading = false;
     update();

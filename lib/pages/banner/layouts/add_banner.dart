@@ -142,7 +142,7 @@ class AddBanner extends StatelessWidget {
                                     child: Icon(Icons.close,
                                         size: 18, color: appCtrl.appTheme.white))))
                       ]))),
-              CustomSnackBar(isAlert: bannerCtrl.isAlert)
+              CustomSnackBar(isAlert: bannerCtrl.isAlert),
             ]);
           });
         }
