@@ -1,0 +1,1 @@
+ C:\\Users\\ok\\AndroidStudioProjects\\multikart_admin\\.dart_tool\\flutter_build\\1a45d59c06c4c5f915603af2873f9ec4\\native_assets.yaml: 
