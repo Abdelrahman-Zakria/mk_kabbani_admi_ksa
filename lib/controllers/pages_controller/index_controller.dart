@@ -7,6 +7,7 @@ import 'package:mk_kabbani_admin/pages/homeSections/homeSections.dart';
 import 'package:mk_kabbani_admin/pages/home_category_list/home_category_list_screen.dart';
 import 'package:mk_kabbani_admin/pages/index/side_bar_menu_model.dart';
 import 'package:mk_kabbani_admin/pages/timer_layout/timer_settings.dart';
+import 'package:mk_kabbani_admin/pages/warranty_activation/warranty_activation_screen.dart';
 
 import 'dart:html' as html;
 import '../../config.dart';
@@ -72,6 +73,11 @@ class IndexLayoutController extends GetxController {
       title: fonts.notification,
     ),
     SidebarMenuConfig(
+      uri: routeName.warrantyActivation,
+      icon: svgAssets.warranty,
+      title: "Warranty Activation",
+    ),
+    SidebarMenuConfig(
       uri: '',
       icon: svgAssets.logout,
       title: fonts.logout,
@@ -90,6 +96,7 @@ class IndexLayoutController extends GetxController {
     CurrentVersionScreen(),
     TimerSettingsScreen(),
     NotificationPage(),
+    WarrantyActivationScreen(),
     Container()
   ];
 
@@ -130,7 +137,7 @@ class IndexLayoutController extends GetxController {
     //       : Get.put(StaticController());
     //   staticCtrl.getData();
     // }
-    if (selectedIndex == 8) {
+    if (selectedIndex == 9) {
       FirebaseAuth.instance.signOut();
       selectedIndex == 0;
       html.window.localStorage[session.isLogin] = "false";

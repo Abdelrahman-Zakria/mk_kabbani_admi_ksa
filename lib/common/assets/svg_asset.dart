@@ -14,5 +14,7 @@ class SvgAssets{
   final String sun = 'assets/svg/sun.svg';
   final String orders = 'assets/svg/orders.svg';
   final String timer = 'assets/svg/timer.svg';
-  /*final String twitter = "assets/common/svg/twitter.svg";*/
+  final String warranty = 'assets/svg/warranty.svg';
+
+/*final String twitter = "assets/common/svg/twitter.svg";*/
 }

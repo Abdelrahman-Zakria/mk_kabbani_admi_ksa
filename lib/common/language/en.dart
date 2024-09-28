@@ -20,6 +20,7 @@ final dynamic en = {
   "selectLanguage": "Select Language",
   "Sub collections" :"Sub collections",
   "Add new sub collection" :"Add new sub collection",
+  "Add new sub product":"Add new sub product",
   "Show in app":"Show in app",
   "lightMode": "Light Mode",
   "darkMode": "Dark Mode",

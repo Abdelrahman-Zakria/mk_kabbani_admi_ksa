@@ -85,6 +85,7 @@ class _MyAppState extends State<MyApp> {
       theme: AppTheme.fromType(ThemeType.light).themeData,
       darkTheme: AppTheme.fromType(ThemeType.dark).themeData,
       themeMode: ThemeService().theme,
+
       scrollBehavior: MyCustomScrollBehavior(),
     );
   }

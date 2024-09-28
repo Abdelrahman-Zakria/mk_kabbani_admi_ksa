@@ -11,6 +11,7 @@ class RouteName {
   final String currentVersion = '/currentVersionScreen';
 
   final String timerSettings = '/timerSettings';
+  final String warrantyActivation = '/warrantyActivation';
 
   final String aboutsUs = '/aboutsUs';
   final String contactUs = '/contactUs';

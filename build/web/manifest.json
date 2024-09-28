@@ -1,11 +1,11 @@
 {
-    "name": "mk_kabbani_admin",
-    "short_name": "mk_kabbani_admin",
+    "name": "MK-Admin-UAE",
+    "short_name": "MK-Admin-UAE",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#hexcode",
     "theme_color": "#hexcode",
-    "description": "Mk-Kabbani Mobile App Admin",
+    "description": "MK-Admin-UAE",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

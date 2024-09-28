@@ -9,6 +9,7 @@ import 'package:mk_kabbani_admin/pages/home_category_list/home_category_list_scr
 import 'package:mk_kabbani_admin/pages/privacy_policy/privacy_policy.dart';
 import 'package:mk_kabbani_admin/pages/terms_condition/terms_condition.dart';
 import 'package:mk_kabbani_admin/pages/timer_layout/timer_settings.dart';
+import 'package:mk_kabbani_admin/pages/warranty_activation/warranty_activation_screen.dart';
 import 'package:mk_kabbani_admin/routes/screen_list.dart';
 
 import '../config.dart';
@@ -28,6 +29,7 @@ class AppRoute {
     GetPage(name: _routeName.dealsOfTheDay, page: ()=> DealsOfTheDayScreen()),
 
     GetPage(name: _routeName.currentVersion, page: ()=> CurrentVersionScreen()),
+    GetPage(name: _routeName.warrantyActivation, page: () =>  WarrantyActivationScreen()),
 
     GetPage(name: _routeName.timerSettings, page: () =>  TimerSettingsScreen()),
     GetPage(name: _routeName.aboutsUs, page: () =>  AboutUsPage()),

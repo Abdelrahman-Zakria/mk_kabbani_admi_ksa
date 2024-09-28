@@ -6,6 +6,8 @@ import 'package:mk_kabbani_admin/pages/homeSections/layouts/banner_image_layout_
 import 'package:mk_kabbani_admin/pages/homeSections/layouts/banner_image_layout_children.dart';
 import 'package:mk_kabbani_admin/pages/homeSections/layouts/banner_image_layout_home_sections.dart';
 import 'package:mk_kabbani_admin/models/category_model.dart' as cat;
+import 'package:mk_kabbani_admin/models/product_model.dart' as product_model;
+
 
 import '../../../config.dart';
 
@@ -41,55 +43,55 @@ class UpdateSection extends StatelessWidget {
                             child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 80),
-                                    child: Container(
-                                      width: MediaQuery.of(context).size.width,
-                                      decoration: BoxDecoration(
-                                        border: Border.all(
-                                            color: Colors.black, width: 1),
-                                        borderRadius: BorderRadius.circular(16),
-                                      ),
-                                      child: Center(
-                                        child: DropdownButton(
-                                            underline: SizedBox.shrink(),
-                                            hint: Text("Choose collection"),
-                                            items: bannerCtrl.homeCategoryList
-                                                .map((cat.Category collection) {
-                                              return DropdownMenuItem<String>(
-                                                value: collection.id,
-                                                child: Text(collection.name!),
-                                              );
-                                            }).toList(),
-                                            onChanged: (val) {
-                                              print("Val changed $val");
-                                              // bannerCtrl.changeNewSectionId(val);
-                                              setState(() {
-                                                bannerCtrl.txtTitle.text =
-                                                    bannerCtrl.homeCategoryList
-                                                        .where((element) =>
-                                                            element.id == val)
-                                                        .first
-                                                        .name!;
-                                                bannerCtrl.txtTitleAr.text =
-                                                    bannerCtrl.homeCategoryList
-                                                        .where((element) =>
-                                                            element.id == val)
-                                                        .first
-                                                        .name!;
-
-                                                bannerCtrl.txtId.text =
-                                                    bannerCtrl.homeCategoryList
-                                                        .where((element) =>
-                                                            element.id == val)
-                                                        .first
-                                                        .id!;
-                                              });
-                                            }),
-                                      ),
-                                    ),
-                                  ),
+                                  // Padding(
+                                  //   padding: const EdgeInsets.symmetric(
+                                  //       horizontal: 80),
+                                  //   child: Container(
+                                  //     width: MediaQuery.of(context).size.width,
+                                  //     decoration: BoxDecoration(
+                                  //       border: Border.all(
+                                  //           color: Colors.black, width: 1),
+                                  //       borderRadius: BorderRadius.circular(16),
+                                  //     ),
+                                  //     child: Center(
+                                  //       child: DropdownButton(
+                                  //           underline: SizedBox.shrink(),
+                                  //           hint: Text("Choose collection"),
+                                  //           items: bannerCtrl.homeCategoryList
+                                  //               .map((cat.Category collection) {
+                                  //             return DropdownMenuItem<String>(
+                                  //               value: collection.id,
+                                  //               child: Text(collection.name!),
+                                  //             );
+                                  //           }).toList(),
+                                  //           onChanged: (val) {
+                                  //             print("Val changed $val");
+                                  //             // bannerCtrl.changeNewSectionId(val);
+                                  //             setState(() {
+                                  //               bannerCtrl.txtTitle.text =
+                                  //                   bannerCtrl.homeCategoryList
+                                  //                       .where((element) =>
+                                  //                           element.id == val)
+                                  //                       .first
+                                  //                       .name!;
+                                  //               bannerCtrl.txtTitleAr.text =
+                                  //                   bannerCtrl.homeCategoryList
+                                  //                       .where((element) =>
+                                  //                           element.id == val)
+                                  //                       .first
+                                  //                       .name!;
+                                  //
+                                  //               bannerCtrl.txtId.text =
+                                  //                   bannerCtrl.homeCategoryList
+                                  //                       .where((element) =>
+                                  //                           element.id == val)
+                                  //                       .first
+                                  //                       .id!;
+                                  //             });
+                                  //           }),
+                                  //     ),
+                                  //   ),
+                                  // ),
                                   SizedBox(
                                     height: 40,
                                   ),
@@ -149,7 +151,7 @@ class UpdateSection extends StatelessWidget {
                                           child: Row(
                                             children: [
                                               Text(
-                                                "Sub collections".tr,
+                                                "Children",
                                                 textAlign: TextAlign.center,
                                               ),
                                             ],
@@ -187,7 +189,7 @@ class UpdateSection extends StatelessWidget {
                                                       padding:
                                                           const EdgeInsets.all(
                                                               10.0),
-                                                      child: Row(
+                                                      child: bannerCtrl.sectionChildren![index]['id'].toString().contains('Collection') ? Row(
                                                         children: [
                                                           Container(
                                                             width: 200,
@@ -325,6 +327,144 @@ class UpdateSection extends StatelessWidget {
                                                               icon: Icon(Icons
                                                                   .delete)),
                                                         ],
+                                                      ):Row(
+                                                        children: [
+                                                          Container(
+                                                            width: 200,
+                                                            child: Column(
+                                                              crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                              children: [
+                                                                Text(
+                                                                  bannerCtrl
+                                                                      .productList
+                                                                      .where((element) =>
+                                                                  element
+                                                                      .id ==
+                                                                      bannerCtrl.sectionChildren![index]
+                                                                      [
+                                                                      'id'])
+                                                                      .toList()[
+                                                                  0]
+                                                                      .name!,
+                                                                  overflow:
+                                                                  TextOverflow
+                                                                      .ellipsis,
+                                                                ),
+                                                                SizedBox(
+                                                                  height: 10,
+                                                                ),
+                                                                Text(
+                                                                  bannerCtrl.sectionChildren![
+                                                                  index]
+                                                                  [
+                                                                  'bannerPath'],
+                                                                  overflow:
+                                                                  TextOverflow
+                                                                      .ellipsis,
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                          Expanded(
+                                                              child:
+                                                              SizedBox()),
+                                                          IconButton(
+                                                              onPressed: () {
+                                                                showDialog(
+                                                                    context:
+                                                                    context,
+                                                                    builder:
+                                                                        (context) {
+                                                                      TextEditingController
+                                                                      idCtrl =
+                                                                      TextEditingController();
+                                                                      TextEditingController
+                                                                      editBanner =
+                                                                      TextEditingController();
+
+                                                                      print("ID CTRL" +
+                                                                          bannerCtrl
+                                                                              .addNewId
+                                                                              .text);
+                                                                      return AlertDialog(
+                                                                        content:
+                                                                        Container(
+                                                                          decoration: BoxDecoration(
+                                                                              color: appCtrl.appTheme.whiteColor,
+                                                                              boxShadow: [
+                                                                                BoxShadow(blurRadius: appCtrl.isTheme ? 1 : 0, spreadRadius: appCtrl.isTheme ? 1 : 0, color: appCtrl.appTheme.blackColor)
+                                                                              ]),
+                                                                          width:
+                                                                          Sizes.s500,
+                                                                          child:
+                                                                          Padding(
+                                                                            padding:
+                                                                            const EdgeInsets.all(20.0),
+                                                                            child:
+                                                                            Stack(
+                                                                              children: [
+                                                                                Column(
+                                                                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                                                                  children: [
+                                                                                    Padding(
+                                                                                      padding: const EdgeInsets.only(top: 15.0),
+                                                                                      child: Text("Edit sub collection".tr, style: AppCss.nunitoblack20.textColor(appCtrl.appTheme.blackColor)),
+                                                                                    ),
+                                                                                    SizedBox(
+                                                                                      height: 100,
+                                                                                    ),
+                                                                                    Text("Sub collection id: " + bannerCtrl.sectionChildren![index]['id']),
+                                                                                    // SizedBox(height: 16,),
+                                                                                    // CommonTextBox(
+                                                                                    //   controller: bannerCtrl.addNewId,
+                                                                                    //   hinText: "ID",
+                                                                                    // ),
+                                                                                    SizedBox(
+                                                                                      height: 30,
+                                                                                    ),
+                                                                                    SectionImageLayoutChildren(imageUrl: bannerCtrl.sectionChildren![index]['bannerPath']?? ""),
+
+                                                                                    Expanded(child: SizedBox()),
+
+                                                                                    CommonButton(
+                                                                                        title: "Update".tr,
+                                                                                        color: appCtrl.appTheme.primary,
+                                                                                        icon: bannerCtrl.isLoadingChild ? CircularProgressIndicator(color: appCtrl.appTheme.blackColor,) : Container(),
+                                                                                        onTap: () async {
+                                                                                          // await bannerCtrl.addMapToChildren(bannerCtrl.txtId.text, {
+                                                                                          //   "id" : bannerCtrl.addNewId.text,
+                                                                                          //   "bannerPath" : bannerCtrl.addNewBanner.text,
+                                                                                          // }).then((value) => Navigator.of(context).pop());
+                                                                                          await bannerCtrl.uploadFileChild(context, bannerCtrl.txtId.text, bannerCtrl.sectionChildren![index]['id'], editBanner.text);
+                                                                                        }),
+                                                                                  ],
+                                                                                ),
+                                                                                Positioned(right: 0.0, top: 0.0, child: InkResponse(onTap: () => Navigator.of(context).pop(), child: CircleAvatar(radius: 12, backgroundColor: appCtrl.appTheme.primary, child: Icon(Icons.close, size: 18, color: appCtrl.appTheme.white)))),
+                                                                              ],
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                      );
+                                                                    });
+                                                              },
+                                                              icon: Icon(
+                                                                  Icons.edit)),
+                                                          IconButton(
+                                                              onPressed: () {
+                                                                bannerCtrl.deleteChildAndShowConfirmation(
+                                                                    context,
+                                                                    bannerCtrl
+                                                                        .txtId
+                                                                        .text,
+                                                                    bannerCtrl.sectionChildren![
+                                                                    index]
+                                                                    ['id']);
+                                                              },
+                                                              icon: Icon(Icons
+                                                                  .delete)),
+                                                        ],
                                                       ),
                                                     ),
                                                   ),
@@ -332,198 +472,395 @@ class UpdateSection extends StatelessWidget {
                                               }),
                                         )
                                       : SizedBox(width: 50,height: 50,child: Center(
-                                    child: CircularProgressIndicator(),
+                                    child: Container(),
                                   ),),
                                   const VSpace(Sizes.s15),
-                                  GestureDetector(
-                                    onTap: () {
-                                      showDialog(
-                                          context: context,
-                                          builder: (context) {
-                                            print("ID CTRL" +
-                                                bannerCtrl.addNewId.text);
-                                            return AlertDialog(
-                                              content: Container(
-                                                decoration: BoxDecoration(
-                                                    color: appCtrl
-                                                        .appTheme.whiteColor,
-                                                    boxShadow: [
-                                                      BoxShadow(
-                                                          blurRadius:
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      GestureDetector(
+                                        onTap: () {
+                                          showDialog(
+                                              context: context,
+                                              builder: (context) {
+                                                print("ID CTRL" +
+                                                    bannerCtrl.addNewId.text);
+                                                return AlertDialog(
+                                                  content: Container(
+                                                    decoration: BoxDecoration(
+                                                        color: appCtrl
+                                                            .appTheme.whiteColor,
+                                                        boxShadow: [
+                                                          BoxShadow(
+                                                              blurRadius:
+                                                                  appCtrl.isTheme
+                                                                      ? 1
+                                                                      : 0,
+                                                              spreadRadius:
+                                                                  appCtrl.isTheme
+                                                                      ? 1
+                                                                      : 0,
+                                                              color: appCtrl
+                                                                  .appTheme
+                                                                  .blackColor)
+                                                        ]),
+                                                    width: Sizes.s500,
+                                                    child: Padding(
+                                                      padding: const EdgeInsets.all(
+                                                          20.0),
+                                                      child: Stack(
+                                                        children: [
+                                                          Column(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .center,
+                                                            children: [
+                                                              Padding(
+                                                                padding:
+                                                                    const EdgeInsets
+                                                                        .only(
+                                                                        top: 15.0),
+                                                                child: Text(
+                                                                    "Add collection"
+                                                                        .tr,
+                                                                    style: AppCss
+                                                                        .nunitoblack20
+                                                                        .textColor(appCtrl
+                                                                            .appTheme
+                                                                            .blackColor),),
+                                                              ),
+                                                              Padding(
+                                                                padding:
+                                                                    const EdgeInsets
+                                                                        .symmetric(
+                                                                        vertical:
+                                                                            16.0),
+                                                                child: Text(
+                                                                  "Choose new sub collection from the collections below",
+                                                                ),
+                                                              ),
+                                                              DropdownButton(
+                                                                  items: bannerCtrl
+                                                                      .homeCategoryList
+                                                                      .map((cat
+                                                                          .Category
+                                                                          collection) {
+                                                                    return DropdownMenuItem<
+                                                                        String>(
+                                                                      value:
+                                                                          collection
+                                                                              .id,
+                                                                      child: Text(
+                                                                          collection
+                                                                              .name!),
+                                                                    );
+                                                                  }).toList(),
+                                                                  onChanged: (val) {
+                                                                    print(
+                                                                        "Val changed $val");
+                                                                    bannerCtrl
+                                                                        .changeNewSectionId(
+                                                                            val);
+                                                                  }),
+                                                              SizedBox(
+                                                                height: 100,
+                                                              ),
+                                                              CommonTextBox(
+                                                                controller:
+                                                                    bannerCtrl
+                                                                        .addNewTitle,
+                                                                hinText: "Title",
+                                                              ),
+                                                              // SizedBox(height: 16,),
+                                                              // CommonTextBox(
+                                                              //   controller: bannerCtrl.addNewId,
+                                                              //   hinText: "ID",
+                                                              // ),
+                                                              SizedBox(
+                                                                height: 50,
+                                                              ),
+                                                              SectionImageLayoutChildren(imageUrl: "",),
+
+                                                              Expanded(
+                                                                  child:
+                                                                      SizedBox()),
+
+                                                              CommonButton(
+                                                                  title:
+                                                                      "Update".tr,
+                                                                  color: appCtrl
+                                                                      .appTheme
+                                                                      .primary,
+                                                                  onTap: () async {
+                                                                    // await bannerCtrl.addMapToChildren(
+                                                                    //     bannerCtrl
+                                                                    //         .txtId
+                                                                    //         .text,
+                                                                    //     {
+                                                                    //       "id": bannerCtrl
+                                                                    //           .addNewId
+                                                                    //           .text,
+                                                                    //       "bannerPath": bannerCtrl
+                                                                    //           .addNewBanner
+                                                                    //           .text,
+                                                                    //     }).then((value) =>
+                                                                    //     Navigator.of(
+                                                                    //         context)
+                                                                    //         .pop());
+                                                                    await bannerCtrl.uploadFileAddChild(context, bannerCtrl
+                                                                        .txtId
+                                                                        .text, bannerCtrl
+                                                                        .addNewId
+                                                                        .text, bannerCtrl
+                                                                        .addNewBanner
+                                                                        .text,);
+                                                                  }),
+                                                            ],
+                                                          ),
+                                                          Positioned(
+                                                              right: 0.0,
+                                                              top: 0.0,
+                                                              child: InkResponse(
+                                                                  onTap: () =>
+                                                                      Navigator.of(
+                                                                              context)
+                                                                          .pop(),
+                                                                  child: CircleAvatar(
+                                                                      radius: 12,
+                                                                      backgroundColor:
+                                                                          appCtrl
+                                                                              .appTheme
+                                                                              .primary,
+                                                                      child: Icon(
+                                                                          Icons
+                                                                              .close,
+                                                                          size: 18,
+                                                                          color: appCtrl
+                                                                              .appTheme
+                                                                              .white)))),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                );
+                                              });
+                                        },
+                                        child: Align(
+                                          alignment: Alignment.center,
+                                          child: Container(
+                                            width: 200,
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(15),
+                                              border:
+                                                  Border.all(color: Colors.black),
+                                            ),
+                                            child: Row(
+                                              mainAxisSize: MainAxisSize.min,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Text("Add collection".tr),
+                                                Icon(Icons.add),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      GestureDetector(
+                                        onTap: () {
+                                          showDialog(
+                                              context: context,
+                                              builder: (context) {
+                                                print("ID CTRL" +
+                                                    bannerCtrl.addNewId.text);
+                                                return AlertDialog(
+                                                  content: Container(
+                                                    decoration: BoxDecoration(
+                                                        color: appCtrl
+                                                            .appTheme.whiteColor,
+                                                        boxShadow: [
+                                                          BoxShadow(
+                                                              blurRadius:
                                                               appCtrl.isTheme
                                                                   ? 1
                                                                   : 0,
-                                                          spreadRadius:
+                                                              spreadRadius:
                                                               appCtrl.isTheme
                                                                   ? 1
                                                                   : 0,
-                                                          color: appCtrl
-                                                              .appTheme
-                                                              .blackColor)
-                                                    ]),
-                                                width: Sizes.s500,
-                                                child: Padding(
-                                                  padding: const EdgeInsets.all(
-                                                      20.0),
-                                                  child: Stack(
-                                                    children: [
-                                                      Column(
-                                                        crossAxisAlignment:
+                                                              color: appCtrl
+                                                                  .appTheme
+                                                                  .blackColor)
+                                                        ]),
+                                                    width: Sizes.s500,
+                                                    child: Padding(
+                                                      padding: const EdgeInsets.all(
+                                                          20.0),
+                                                      child: Stack(
+                                                        children: [
+                                                          Column(
+                                                            crossAxisAlignment:
                                                             CrossAxisAlignment
                                                                 .center,
-                                                        children: [
-                                                          Padding(
-                                                            padding:
+                                                            children: [
+                                                              Padding(
+                                                                padding:
                                                                 const EdgeInsets
                                                                     .only(
                                                                     top: 15.0),
-                                                            child: Text(
-                                                                "Add new sub collection"
-                                                                    .tr,
-                                                                style: AppCss
-                                                                    .nunitoblack20
-                                                                    .textColor(appCtrl
-                                                                        .appTheme
-                                                                        .blackColor)),
-                                                          ),
-                                                          Padding(
-                                                            padding:
+                                                                child: Text(
+                                                                  "Add product"
+                                                                      .tr,
+                                                                  style: AppCss
+                                                                      .nunitoblack20
+                                                                      .textColor(appCtrl
+                                                                      .appTheme
+                                                                      .blackColor),),
+                                                              ),
+                                                              Padding(
+                                                                padding:
                                                                 const EdgeInsets
                                                                     .symmetric(
                                                                     vertical:
-                                                                        16.0),
-                                                            child: Text(
-                                                              "Choose new sub collection from the collections below",
-                                                            ),
-                                                          ),
-                                                          DropdownButton(
-                                                              items: bannerCtrl
-                                                                  .homeCategoryList
-                                                                  .map((cat
-                                                                      .Category
-                                                                      collection) {
-                                                                return DropdownMenuItem<
-                                                                    String>(
-                                                                  value:
-                                                                      collection
+                                                                    16.0),
+                                                                child: Text(
+                                                                  "Choose new sub product from the products below",
+                                                                ),
+                                                              ),
+                                                              DropdownButton(
+                                                                  items: bannerCtrl
+                                                                      .productList
+                                                                      .map((product_model.Product
+                                                                  product) {
+                                                                    return DropdownMenuItem<
+                                                                        String>(
+                                                                      value:
+                                                                      product
                                                                           .id,
-                                                                  child: Text(
-                                                                      collection
-                                                                          .name!),
-                                                                );
-                                                              }).toList(),
-                                                              onChanged: (val) {
-                                                                print(
-                                                                    "Val changed $val");
-                                                                bannerCtrl
-                                                                    .changeNewSectionId(
+                                                                      child: Container(
+                                                                        width: 220,
+                                                                        child: Text(
+                                                                          overflow: TextOverflow.ellipsis,
+                                                                            product
+                                                                                .name!),
+                                                                      ),
+                                                                    );
+                                                                  }).toList(),
+                                                                  onChanged: (val) {
+                                                                    print(
+                                                                        "Val changed $val");
+                                                                    bannerCtrl
+                                                                        .changeNewProductId(
                                                                         val);
-                                                              }),
-                                                          SizedBox(
-                                                            height: 100,
-                                                          ),
-                                                          CommonTextBox(
-                                                            controller:
+                                                                  }),
+                                                              SizedBox(
+                                                                height: 100,
+                                                              ),
+                                                              CommonTextBox(
+                                                                controller:
                                                                 bannerCtrl
                                                                     .addNewTitle,
-                                                            hinText: "Title",
-                                                          ),
-                                                          // SizedBox(height: 16,),
-                                                          // CommonTextBox(
-                                                          //   controller: bannerCtrl.addNewId,
-                                                          //   hinText: "ID",
-                                                          // ),
-                                                          SizedBox(
-                                                            height: 50,
-                                                          ),
-                                                          SectionImageLayoutChildren(imageUrl: "",),
+                                                                hinText: "Title",
+                                                              ),
+                                                              // SizedBox(height: 16,),
+                                                              // CommonTextBox(
+                                                              //   controller: bannerCtrl.addNewId,
+                                                              //   hinText: "ID",
+                                                              // ),
+                                                              // SizedBox(
+                                                              //   height: 50,
+                                                              // ),
+                                                              // SectionImageLayoutChildren(imageUrl: "",),
 
-                                                          Expanded(
-                                                              child:
+                                                              Expanded(
+                                                                  child:
                                                                   SizedBox()),
 
-                                                          CommonButton(
-                                                              title:
+                                                              CommonButton(
+                                                                  title:
                                                                   "Update".tr,
-                                                              color: appCtrl
-                                                                  .appTheme
-                                                                  .primary,
-                                                              onTap: () async {
-                                                                // await bannerCtrl.addMapToChildren(
-                                                                //     bannerCtrl
-                                                                //         .txtId
-                                                                //         .text,
-                                                                //     {
-                                                                //       "id": bannerCtrl
-                                                                //           .addNewId
-                                                                //           .text,
-                                                                //       "bannerPath": bannerCtrl
-                                                                //           .addNewBanner
-                                                                //           .text,
-                                                                //     }).then((value) =>
-                                                                //     Navigator.of(
-                                                                //         context)
-                                                                //         .pop());
-                                                                await bannerCtrl.uploadFileAddChild(context, bannerCtrl
-                                                                    .txtId
-                                                                    .text, bannerCtrl
-                                                                    .addNewId
-                                                                    .text, bannerCtrl
-                                                                    .addNewBanner
-                                                                    .text,);
-                                                              }),
-                                                        ],
-                                                      ),
-                                                      Positioned(
-                                                          right: 0.0,
-                                                          top: 0.0,
-                                                          child: InkResponse(
-                                                              onTap: () =>
-                                                                  Navigator.of(
+                                                                  color: appCtrl
+                                                                      .appTheme
+                                                                      .primary,
+                                                                  onTap: () async {
+                                                                    // await bannerCtrl.addMapToChildren(
+                                                                    //     bannerCtrl
+                                                                    //         .txtId
+                                                                    //         .text,
+                                                                    //     {
+                                                                    //       "id": bannerCtrl
+                                                                    //           .addNewId
+                                                                    //           .text,
+                                                                    //       "bannerPath": bannerCtrl
+                                                                    //           .addNewBanner
+                                                                    //           .text,
+                                                                    //     }).then((value) =>
+                                                                    //     Navigator.of(
+                                                                    //         context)
+                                                                    //         .pop());
+                                                                    await bannerCtrl.uploadFileAddChildProd(context, bannerCtrl
+                                                                        .txtId
+                                                                        .text, bannerCtrl
+                                                                        .addNewId
+                                                                        .text, bannerCtrl
+                                                                        .addNewBanner
+                                                                        .text,);
+                                                                  }),
+                                                            ],
+                                                          ),
+                                                          Positioned(
+                                                              right: 0.0,
+                                                              top: 0.0,
+                                                              child: InkResponse(
+                                                                  onTap: () =>
+                                                                      Navigator.of(
                                                                           context)
-                                                                      .pop(),
-                                                              child: CircleAvatar(
-                                                                  radius: 12,
-                                                                  backgroundColor:
+                                                                          .pop(),
+                                                                  child: CircleAvatar(
+                                                                      radius: 12,
+                                                                      backgroundColor:
                                                                       appCtrl
                                                                           .appTheme
                                                                           .primary,
-                                                                  child: Icon(
-                                                                      Icons
-                                                                          .close,
-                                                                      size: 18,
-                                                                      color: appCtrl
-                                                                          .appTheme
-                                                                          .white)))),
-                                                    ],
+                                                                      child: Icon(
+                                                                          Icons
+                                                                              .close,
+                                                                          size: 18,
+                                                                          color: appCtrl
+                                                                              .appTheme
+                                                                              .white)))),
+                                                        ],
+                                                      ),
+                                                    ),
                                                   ),
-                                                ),
-                                              ),
-                                            );
-                                          });
-                                    },
-                                    child: Align(
-                                      alignment: Alignment.center,
-                                      child: Container(
-                                        width: 200,
-                                        decoration: BoxDecoration(
-                                          borderRadius:
+                                                );
+                                              });
+                                        },
+                                        child: Align(
+                                          alignment: Alignment.center,
+                                          child: Container(
+                                            width: 200,
+                                            decoration: BoxDecoration(
+                                              borderRadius:
                                               BorderRadius.circular(15),
-                                          border:
+                                              border:
                                               Border.all(color: Colors.black),
-                                        ),
-                                        child: Row(
-                                          mainAxisSize: MainAxisSize.min,
-                                          mainAxisAlignment:
+                                            ),
+                                            child: Row(
+                                              mainAxisSize: MainAxisSize.min,
+                                              mainAxisAlignment:
                                               MainAxisAlignment.center,
-                                          children: [
-                                            Text("Add new sub collection".tr),
-                                            Icon(Icons.add),
-                                          ],
+                                              children: [
+                                                Text("Add product".tr),
+                                                Icon(Icons.add),
+                                              ],
+                                            ),
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  )
+                                    ],
+                                  ),
                                 ])),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,

@@ -10,12 +10,15 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_dropzone/flutter_dropzone.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mk_kabbani_admin/pages/homeSections/layouts/add_banner_home_sections.dart';
+import 'package:mk_kabbani_admin/pages/homeSections/layouts/add_product_home_section.dart';
 import 'package:mk_kabbani_admin/pages/homeSections/layouts/update_banner_home_section.dart';
 import 'package:responsive_table/responsive_table.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import '../../config.dart';
 import 'package:mk_kabbani_admin/shopify/shopify_mixin.dart';
 import 'package:mk_kabbani_admin/models/category_model.dart' as cat;
+import 'package:mk_kabbani_admin/models/product_model.dart' as product_model;
+
 
 
 
@@ -23,7 +26,6 @@ class HomeSectionsController extends GetxController with ShopifyMixin{
   List<DatatableHeader>? homeSectionsHeaders;
   late DropzoneViewController? controller1;
   late DropzoneViewController? controllerChild;
-
   late DropzoneViewController? controller2;
 
   final List<int> perPages = [10, 20, 50, 100];
@@ -79,6 +81,8 @@ class HomeSectionsController extends GetxController with ShopifyMixin{
 
   bool sortAscending = true;
   bool isLoading = true;
+  bool isLoadingProd = true;
+
   bool isLoadingChild = false;
 
   final bool showSelect = true;
@@ -91,11 +95,12 @@ class HomeSectionsController extends GetxController with ShopifyMixin{
   List? sectionChildren = [];
   var random = Random();
   List<cat.Category> homeCategoryList = [];
+  List<product_model.Product> productList = [];
+
 
   List<Map<String, dynamic>> _generateData() {
     print("Home sections length: ${homeSections.length}");
     List source = homeSections.toSet().toList();
-    //print("Source length ${source.length}");
     List<Map<String, dynamic>> temps = [];
     var i = 1;
     if (kDebugMode) {
@@ -171,6 +176,13 @@ class HomeSectionsController extends GetxController with ShopifyMixin{
     addNewId.text = newId;
     addNewTitle.text = homeCategoryList.where((element) => element.id == newId).toList()[0].name!;
     addNewBanner.text = homeCategoryList.where((element) => element.id == newId).toList()[0].image!;
+    update();
+  }
+
+  changeNewProductId(newId){
+    addNewId.text = newId;
+    addNewTitle.text = productList.where((element) => element.id == newId).toList()[0].name!;
+    addNewBanner.text = productList.where((element) => element.id == newId).toList()[0].images[0]!;
     update();
   }
 
@@ -254,7 +266,7 @@ class HomeSectionsController extends GetxController with ShopifyMixin{
             'bannerPathAr' : imageUrlAr,
             "title": txtTitle.text,
             "children" : [],
-            'priority' : homeSections.length + 2,
+            'priority' : homeSections.length + 1,
             "titleAr" : txtTitleAr.text,
             "isShown":true,
           }).then((value) {
@@ -490,6 +502,46 @@ class HomeSectionsController extends GetxController with ShopifyMixin{
           txtTitle.clear();
     });
   }
+
+  addProductDialog({data}) async {
+    if (data != null) {
+      txtTitle.text = data["title"];
+      txtTitleAr.text = data["titleAr"];
+      txtId.text = data["collectionId"].toString();
+      imageUrl = data["bannerPath"];
+      imageUrlAr = data['bannerPathAr'];
+      isShown = true;
+      update();
+    } else {
+      txtTitle.text = "";
+      txtId.text = "";
+      idType = "";
+      imageUrl = "";
+      bannerId = "";
+      imageUrlAr = "";
+      webImage = Uint8List(8);
+      webImageAr = Uint8List(8);
+      update();
+    }
+    log.log("bannerId : $bannerId");
+    showDialog(
+        context: Get.context!,
+        builder: (BuildContext context) {
+
+          return StatefulBuilder(
+              builder: (BuildContext context, StateSetter setState) {
+                print("From adddddd: ${sectionChildren!.length}");
+                getSectionChildren(txtId.text);
+                return AddProduct(childrenList: sectionChildren,);
+              });
+        }).then((value) {
+      sectionChildren!.clear();
+      txtId.clear();
+      txtTitleAr.clear();
+      txtTitle.clear();
+    });
+  }
+
 
   updateBannerDialog({data}) async {
     if (data != null) {
@@ -784,6 +836,13 @@ class HomeSectionsController extends GetxController with ShopifyMixin{
     for(cat.Category category in homeCategoryList){
       print("Title ${category.name} , id: ${category.id} , banner: ${category.image ?? ""}");
     }
+
+    productList  = await shopifyService.getAllProduct();
+
+    for(product_model.Product product in productList){
+      print("Product Title ${product.name} , id: ${product.id} , banner: ${product.images[0] ?? ""}");
+    }
+    productList.sort((a, b) => a.name!.compareTo(b.name!));
     update();
   }
 
@@ -1413,6 +1472,74 @@ class HomeSectionsController extends GetxController with ShopifyMixin{
     }
   }
 
+  Future<void> uploadFileAddChildProd(context,docId,childId,bannerPath) async {
+    isLoadingChild = true;
+    update();
+    bool isLoginTest = appCtrl.storage.read(session.isLoginTest);
+
+    var myDialog =
+    showDialog(context: context, builder: (context) => SizedBox(
+      width: 50,
+      height: 50,
+      child: Center(child: CircularProgressIndicator(),),),);
+
+    if (isLoginTest) {
+      accessDenied(fonts.modification.tr);
+      return;
+    }
+
+    update();
+
+    try {
+      await addMapToChildren(
+          docId,
+          {
+            "id": childId,
+            "bannerPath": "",
+          });
+    } catch (error) {
+      // Handle errors
+      print("Error uploading images: $error");
+    } finally {
+      Navigator.of(context).pop();
+      Navigator.pop(context);
+      Navigator.pop(context);
+      imageUrlChild = "";
+      webImageChild.clear();
+      pickImageChild!.delete();
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          shape:
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          content: Text(
+            "Added successfully",
+            style: TextStyle(
+              fontSize: 20,
+              color: Colors.green,
+              fontWeight: FontWeight.w400,
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text(
+                "OK".tr,
+                style: TextStyle(
+                  color: appCtrl.appTheme.primary,
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+
+      isLoadingChild = false;
+      update();
+    }
+  }
 
 
 
@@ -1535,8 +1662,38 @@ class HomeSectionsController extends GetxController with ShopifyMixin{
           });
         });
       } else {
-        //updateSectionCollectionId(collectionId: txtId.text, newTitle: txtTitle.text, newTitleAr: txtTitleAr.text, newImageUrl: imageUrl, newImageUrlAr: imageUrlAr);
-      }if (pickImageAr != null) {
+        Get.back();
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            content: Text(
+              "Please choose image first",
+              style: TextStyle(
+                fontSize: 20,
+                color: Colors.red,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text(
+                  "OK".tr,
+                  style: TextStyle(
+                    color: appCtrl.appTheme.primary,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+
+      }
+      if (pickImageAr != null) {
         update();
         String fileName = DateTime.now().millisecondsSinceEpoch.toString();
         Reference reference = FirebaseStorage.instance.ref().child(fileName);
@@ -1564,7 +1721,36 @@ class HomeSectionsController extends GetxController with ShopifyMixin{
           });
         });
       } else {
-        // saveHomeSection();
+        Get.back();
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            content: Text(
+              "Please choose image first",
+              style: TextStyle(
+                fontSize: 20,
+                color: Colors.red,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text(
+                  "OK".tr,
+                  style: TextStyle(
+                    color: appCtrl.appTheme.primary,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+
       }
     }
   }

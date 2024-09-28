@@ -39,6 +39,7 @@ final dynamic ar = {
   "enterNotificationContent": "أدخل محتوى الإخطار",
   "Sub collections" : "المجموعات الفرعية",
   "Add new sub collection" : "إضافة مجموعة فرعية جديدة",
+  "Add new sub product":"إضافة منتج فرعي جديد",
   "Show in app":"عرض في التطبيق",
   "image": "صورة",
   "addImage": "إضافة صورة",

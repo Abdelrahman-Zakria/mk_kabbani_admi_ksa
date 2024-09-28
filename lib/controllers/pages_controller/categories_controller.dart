@@ -161,6 +161,7 @@ class CategoriesController extends GetxController with ShopifyMixin{
 
   @override
   void onInit() {
+   // updatePriorities();
     fetchInitialSwitchValues();
     update();
     getData();

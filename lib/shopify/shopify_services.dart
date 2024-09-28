@@ -4,12 +4,20 @@ import 'package:graphql/client.dart';
 import 'package:mk_kabbani_admin/models/category_model.dart' as cat;
 import 'package:mk_kabbani_admin/shopify/shopify_query.dart';
 
+import '../models/product_model.dart' as product_model;
+import 'shopify_storage.dart';
+
+
+
+
 class ShopifyService {
   ShopifyService() : super() {
     client = getClient();
   }
 
   late GraphQLClient client;
+  ShopifyStorage shopifyStorage = ShopifyStorage();
+
 
   GraphQLClient getClient() {
     final httpLink =
@@ -75,5 +83,92 @@ class ShopifyService {
       return categories ?? [];
     }
   }
+
+
+  Future<List<product_model.Product>> getAllProduct({
+    categoryId,
+    tagId,
+    page = 1,
+    minPrice,
+    maxPrice,
+    orderBy,
+    lang,
+    order,
+    attribute,
+    attributeTerm,
+    featured,
+    onSale,
+    listingLocation,
+    userId,
+    nextCursor,
+    String? include,
+    String? search,
+    limit,
+    sortKey,
+    reverse,
+    color,
+    query,
+  }) async {
+    List<product_model.Product> productList = [];
+    bool hasNextPage = true;
+    String? cursor;
+
+    while (hasNextPage) {
+      try {
+        log('::::request fetchProductsByCategory with category id $categoryId search:$search');
+        log('::::request fetchProductsByCategory with cursor $cursor');
+
+        final options = QueryOptions(
+          document: gql(ShopifyQuery.getProducts),
+          fetchPolicy: FetchPolicy.networkOnly,
+          variables: <String, dynamic>{
+            'pageSize': limit ?? 100,
+            'color': color,
+            'lang': "EN",
+            if (sortKey != "" && sortKey != null) 'sortKey': sortKey ?? "",
+            'reverse': reverse,
+            'query': query,
+            'cursor': cursor,
+          },
+        );
+
+        final result = await client.query(options);
+
+        if (result.hasException) {
+          log(result.exception.toString());
+          break;
+        }
+
+        var node = result.data?['products'];
+
+        if (node != null) {
+          var productResp = node;
+          var pageInfo = productResp['pageInfo'];
+          hasNextPage = pageInfo['hasNextPage'];
+          var edges = productResp['edges'];
+
+          if (edges.isNotEmpty) {
+            cursor = edges.last['cursor'];
+
+            for (var item in edges) {
+              var product = item['node'];
+              product['categoryId'] = categoryId;
+              productList.add(product_model.Product.fromShopify(product));
+            }
+          }
+        } else {
+          hasNextPage = false;
+        }
+      } catch (e) {
+        log('::::fetchProductsByCategory shopify error $e');
+        log(e.toString());
+        rethrow;
+      }
+    }
+
+    log("Total products fetched: ${productList.length}");
+    return productList;
+  }
+
 
 }
